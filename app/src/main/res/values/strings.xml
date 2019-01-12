@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AccessPoint</string>
+    <string name="title_activity_visitor_info">VisitorInfoActivity</string>
+</resources>
