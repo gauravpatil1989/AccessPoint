@@ -1,15 +1,18 @@
 package com.example.apple.accesspoint;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,16 +27,23 @@ public class VisitorInfoActivity extends AppCompatActivity {
     TextView visitor_name,company_name,visitor_email,visitor_mobile,total_entries,last_visit;
     Button btn_access;
     ApiInterface apiInterface;
+    RelativeLayout logout_layout,back_layout;
     String id ;
+    Toolbar toolbar;
+    TextView toolbar_title;
+    String choice;
+    String gateNo;
+    String empName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visitor_info);
         apiInterface = APIList.getApClient().create(ApiInterface.class);
-
-
-
-
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        logout_layout = (RelativeLayout) findViewById(R.id.logout_layout);
+        logout_layout.setVisibility(View.VISIBLE);
+        back_layout = (RelativeLayout) toolbar.findViewById(R.id.back_layout);
+        back_layout.setVisibility(View.VISIBLE);
         visitor_name = (TextView) findViewById(R.id.visitor_name);
         company_name = (TextView) findViewById(R.id.company_name);
         visitor_email = (TextView) findViewById(R.id.visitor_email);
@@ -41,16 +51,19 @@ public class VisitorInfoActivity extends AppCompatActivity {
         total_entries = (TextView) findViewById(R.id.total_entries);
         last_visit = (TextView) findViewById(R.id.last_visit);
         btn_access = (Button) findViewById(R.id.btn_access);
-
+        toolbar_title = (TextView) findViewById(R.id.toolbar_title);
+        toolbar_title.setText("VisitorInfo");
+        gateNo = SharedPref.getSharedPreferenceForString(VisitorInfoActivity.this, SharedPref.GATENO);
+        empName = SharedPref.getSharedPreferenceForString(VisitorInfoActivity.this, SharedPref.NAME);
 
         String NAME= getIntent().getStringExtra("FULLNAME");
-        id= getIntent().getStringExtra("ID");
+        id= getIntent().getStringExtra("VisitorID");
         String email= getIntent().getStringExtra("EMAIL");
         String mobile= getIntent().getStringExtra("MOBILE");
         String cname= getIntent().getStringExtra("CNAME");
         String totalentries= getIntent().getStringExtra("TOTALENTRIES");
         String lastaccess= getIntent().getStringExtra("LASTACCESS");
-
+        choice = getIntent().getStringExtra("Choice");
         visitor_name.setText(NAME);
         //visitor_name.setText(id);
         company_name.setText(email);
@@ -62,7 +75,48 @@ public class VisitorInfoActivity extends AppCompatActivity {
         btn_access.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gateAccess("Gate_1",id,id);
+                if (choice.equals("V")){
+                    gateAccess(gateNo,id,empName);
+                }else{
+                    exhibitorGateAccess(gateNo,id,empName);
+
+                }
+            }
+        });
+
+
+        back_layout = (RelativeLayout) toolbar.findViewById(R.id.back_layout) ;
+        back_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(VisitorInfoActivity.this,StaffLoginActivity.class));
+                finish();
+            }
+        });
+        logout_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(VisitorInfoActivity.this);
+                builder1.setCancelable(false);
+                builder1
+                        .setTitle("Alert")
+                        .setMessage("Are you sure you want to Logout From App ? ")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                SharedPref.putSharedPreferenceForString(VisitorInfoActivity.this, SharedPref.LOGGEDINSTATUS, "LOGGED_OUT");
+                                startActivity(new Intent(VisitorInfoActivity.this,MainActivity.class));
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                dialog.dismiss();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
 
@@ -79,6 +133,47 @@ public class VisitorInfoActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<UniversalModel> call, Response<UniversalModel> response) {
                 Log.d("gateresponse", new Gson().toJson(response.body()));
+                // progressDialog.dismiss();
+                if (!new  Gson().toJson(response.body()).equals(null)){
+                    String code = new Gson().toJson(response.body().getCode());
+                    String trimCode = code.replaceAll("\"","");
+
+                    if (trimCode.equals("1")) {
+                        Toast.makeText(VisitorInfoActivity.this, response.body().getMessage(), Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(VisitorInfoActivity.this,StaffLoginActivity.class));
+                        finish();
+                    } else if (response.body().getCode().equals("0")) {
+                        Toast.makeText(VisitorInfoActivity.this, response.body().getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }else {
+                    Toast.makeText(VisitorInfoActivity.this, "Null In Response", Toast.LENGTH_SHORT).show();
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<UniversalModel> call, Throwable t) {
+                //progressDialog.dismiss();
+                Toast.makeText(VisitorInfoActivity.this, "Something is wrong", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+
+    private void exhibitorGateAccess(String gateId,String visitorId,String staffId) {
+        Call<UniversalModel> call = apiInterface.ExhibitorGateAccess(gateId,visitorId,staffId);
+
+        //progressDialog.show();
+        // progressDialog.setCancelable(false);
+
+
+        call.enqueue(new Callback<UniversalModel>() {
+            @Override
+            public void onResponse(Call<UniversalModel> call, Response<UniversalModel> response) {
+                Log.d("exhibitorGateResponse", new Gson().toJson(response.body()));
                 // progressDialog.dismiss();
                 if (!new  Gson().toJson(response.body()).equals(null)){
                     String code = new Gson().toJson(response.body().getCode());

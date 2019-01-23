@@ -6,17 +6,116 @@
     android:background="@color/white"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:layout_below="@+id/toolbar"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/img_exhib_logo"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="130dp"
             android:src="@drawable/connect"/>
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Click to Scan QR code"
+            android:textSize="16sp"
+            android:gravity="center_horizontal"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/btn_qrcode"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/qr_symbol"/>
+
+            <ImageView
+                android:id="@+id/btn_camera"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_toRightOf="@id/btn_qrcode"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/camera_flip"/>
+            <TextView
+                android:id="@+id/txt_cam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/btn_qrcode"
+                android:layout_below="@id/btn_camera"
+                android:text=""/>
+        </RelativeLayout>
+
+        <!--<LinearLayout-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="2dp"-->
+            <!--android:background="@color/black"></LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="100"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+               android:text="You are at Gate number"
+                android:textStyle="bold"
+                android:layout_weight="60"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/gate_number"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:background="@null"
+                android:layout_weight="10"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:inputType="number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_weight="20"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/chenage_name"
+                    android:src="@drawable/edit"
+                    android:textSize="14sp"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/edit_name"
+                    android:textSize="12sp"
+                    android:text="Tap to Edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/linear_login"
@@ -33,8 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:hint="User Id"
-                android:text="919769569608"
+                android:hint="Mobile No / Email / Visitor Id"
                 android:inputType="text"
                 android:imeOptions="actionNext"/>
 
@@ -47,13 +145,26 @@
                 android:layout_marginTop="20dp"
                 android:background="@color/app_color"
                 android:textColor="@color/white"
-                android:text="Login"/>
+                android:text="Search"/>
 
 
         </LinearLayout>
+
+
+
+
+
     </LinearLayout>
 
-
+    <TextView
+        android:text="LoggedIn"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/emp_name_text"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
 </RelativeLayout>

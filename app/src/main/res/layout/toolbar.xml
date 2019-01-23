@@ -1,0 +1,59 @@
+
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_cart"
+    android:layout_width="match_parent"
+    android:layout_height="?actionBarSize"
+    android:minHeight="?actionBarSize"
+    android:elevation="4dip"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp"
+    android:background="@color/app_color">
+    <RelativeLayout
+        android:layout_width="60dp"
+        android:visibility="gone"
+        android:layout_height="fill_parent"
+        android:layout_gravity="left|center"
+        android:id="@+id/back_layout"
+        android:paddingRight="15dp"
+
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbar_back"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_arrow_back_black_24dp"/>
+    </RelativeLayout>
+    <!-- <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center"
+        android:paddingRight="10dp"
+        android:background="@drawable/black_back_arrow"
+        /> -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:layout_gravity="center"
+        android:id="@+id/toolbar_title"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:visibility="gone"
+        android:layout_gravity="right|center"
+        android:id="@+id/logout_layout"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbar_settings"
+            android:layout_centerInParent="true"
+            android:paddingRight="5dp"
+            android:src="@drawable/logout"/>
+    </RelativeLayout>
+</android.support.v7.widget.Toolbar>

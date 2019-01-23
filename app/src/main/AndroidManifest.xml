@@ -3,14 +3,15 @@
     package="com.example.apple.accesspoint">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/connect"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/connect"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +22,10 @@
         <activity android:name=".StaffLoginActivity" />
         <activity
             android:name=".VisitorInfoActivity"
-            android:label="@string/title_activity_visitor_info"></activity>
+            android:label="@string/title_activity_visitor_info"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".QRScannerActivity" />
+        <activity android:name=".MenuSelectionActivity"></activity>
     </application>
 
 </manifest>

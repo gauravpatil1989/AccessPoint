@@ -6,16 +6,19 @@
     android:background="@color/white"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:layout_below="@+id/toolbar"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/img_exhib_logo"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:src="@drawable/connect"/>
 
         <LinearLayout
@@ -34,16 +37,21 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:hint="User Id"
-                android:text="stf_1"
                 android:inputType="text"
                 android:imeOptions="actionNext"/>
-
+            <EditText
+                android:id="@+id/gate_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:hint="Enter the Gate Number"
+                android:inputType="number"
+                android:imeOptions="actionNext"/>
             <EditText
                 android:id="@+id/login_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="pass@123"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:hint="Password"
@@ -60,13 +68,6 @@
                 android:background="@color/app_color"
                 android:textColor="@color/white"
                 android:text="Login"/>
-
-            <TextView
-                android:gravity="center"
-                android:layout_marginTop="10dp"
-                android:text="Forgot Password ?"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </LinearLayout>

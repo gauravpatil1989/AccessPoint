@@ -13,7 +13,6 @@ public interface ApiInterface {
                                      @Field("password") String idea);
 
 
-
     @FormUrlEncoded
     @POST("VisitorInfo")
     retrofit2.Call<JsonObject> StaffLogin(@Field("data") String EmpId);
@@ -23,4 +22,12 @@ public interface ApiInterface {
     @POST("GateAccess")
     retrofit2.Call<UniversalModel> gateAccess(@Field("gateid") String gateId,@Field("vid") String visitorId,@Field("staffid") String staffId);
 
+    @FormUrlEncoded
+    @POST("Exhibitor_GateAccess")
+    retrofit2.Call<UniversalModel> ExhibitorGateAccess(@Field("gateid") String gateId,@Field("exhibid") String exhibId,@Field("staffid") String EmpId);
+
+
+    @FormUrlEncoded
+    @POST("ExhibitorAccessInfo")
+    retrofit2.Call<JsonObject> ExhibitorAccess(@Field("data") String gateId);
 }
