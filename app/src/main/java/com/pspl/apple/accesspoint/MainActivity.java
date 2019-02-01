@@ -1,9 +1,12 @@
-package com.example.apple.accesspoint;
+package com.pspl.apple.accesspoint;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,24 +44,32 @@ public class MainActivity extends AppCompatActivity {
             loginBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(login_username.getText().toString().isEmpty()){
-                        Toast.makeText(MainActivity.this, "Enter the Staff Name", Toast.LENGTH_SHORT).show();
-                    }else if (gate_no.getText().toString().isEmpty()){
-                        Toast.makeText(MainActivity.this, "Enter Gate Number", Toast.LENGTH_SHORT).show();
-                    }else if (login_username.getText().toString().isEmpty()){
-                        Toast.makeText(MainActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
+                    if (isNetworkAvailable()){
+                        if(login_username.getText().toString().isEmpty()){
+                            Toast.makeText(MainActivity.this, "Enter the Staff Name", Toast.LENGTH_SHORT).show();
+                        }else if (gate_no.getText().toString().isEmpty()){
+                            Toast.makeText(MainActivity.this, "Enter Gate Number", Toast.LENGTH_SHORT).show();
+                        }else if (login_username.getText().toString().isEmpty()){
+                            Toast.makeText(MainActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
+                        }else{
+                            SharedPref.putSharedPreferenceForString(MainActivity.this, SharedPref.NAME, login_username.getText().toString());
+                            SharedPref.putSharedPreferenceForString(MainActivity.this, SharedPref.GATENO, gate_no.getText().toString());
+                            visitorLogin(login_username.getText().toString(),login_password.getText().toString());
+                        }
                     }else{
-                        SharedPref.putSharedPreferenceForString(MainActivity.this, SharedPref.NAME, login_username.getText().toString());
-                        SharedPref.putSharedPreferenceForString(MainActivity.this, SharedPref.GATENO, gate_no.getText().toString());
-                        visitorLogin(login_username.getText().toString(),login_password.getText().toString());
+                        Toast.makeText(MainActivity.this, "Pls Check the internet Connection....!", Toast.LENGTH_SHORT).show();
                     }
-
                 }
             });
         }
-
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     private void visitorLogin(String email,String Password) {
         Call<UniversalModel> call = apiInterface.Login(email,Password);

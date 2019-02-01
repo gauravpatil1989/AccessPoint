@@ -1,4 +1,4 @@
-package com.example.apple.accesspoint;
+package com.pspl.apple.accesspoint;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,9 +19,7 @@ public class SharedPref {
 
     private static SharedPreferences sharedpreferences;
     public static final String M_IN = "M_IN";
-
-    public static final String EMPID = "emp_id";
-    public static final String MEMID = "mem_id";
+    public static final String CHOICE = "choice";
     public static final String NAME = "name";
     public static final String EMAIL = "email";
     public static final String GATENO = "gete_no";

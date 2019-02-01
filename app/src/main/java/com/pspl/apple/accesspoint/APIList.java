@@ -1,4 +1,4 @@
-package com.example.apple.accesspoint;
+package com.pspl.apple.accesspoint;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

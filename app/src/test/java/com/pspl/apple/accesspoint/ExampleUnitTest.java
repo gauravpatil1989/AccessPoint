@@ -1,4 +1,4 @@
-package com.example.apple.accesspoint;
+package com.pspl.apple.accesspoint;
 
 import org.junit.Test;
 

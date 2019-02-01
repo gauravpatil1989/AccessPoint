@@ -1,6 +1,8 @@
-package com.example.apple.accesspoint;
+package com.pspl.apple.accesspoint;
 
 import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -30,4 +32,8 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("ExhibitorAccessInfo")
     retrofit2.Call<JsonObject> ExhibitorAccess(@Field("data") String gateId);
+
+    @FormUrlEncoded
+    @POST("SaveBulkGateVisits")
+    retrofit2.Call<JsonObject> SaveBulkGateVisits(@Field("data") JSONObject EmpId);
 }

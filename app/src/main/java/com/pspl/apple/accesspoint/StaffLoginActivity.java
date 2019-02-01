@@ -1,24 +1,27 @@
-package com.example.apple.accesspoint;
+package com.pspl.apple.accesspoint;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -35,10 +38,13 @@ public class StaffLoginActivity extends AppCompatActivity {
     ImageView btn_qrcode;
     RelativeLayout logout_layout;
     ImageView btn_camera;
-    TextView txt_cam,edit_name;
+    TextView txt_cam,edit_name,toolbar_title;
     ProgressDialog dialog;
     ImageView chenage_name;
     String gateNo;
+    RelativeLayout back_layout;
+    Toolbar toolbar;
+    LinearLayout linear_login;
     boolean flag = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,9 @@ public class StaffLoginActivity extends AppCompatActivity {
         gateNo = SharedPref.getSharedPreferenceForString(StaffLoginActivity.this, SharedPref.GATENO);
         apiInterface = APIList.getApClient().create(ApiInterface.class);
         logout_layout = (RelativeLayout) findViewById(R.id.logout_layout);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        linear_login = (LinearLayout) findViewById(R.id.linear_login);
+        toolbar_title = (TextView) findViewById(R.id.toolbar_title);
         logout_layout.setVisibility(View.VISIBLE);
         emp_name_text = (TextView) findViewById(R.id.emp_name_text);
         gate_number = (EditText) findViewById(R.id.gate_number);
@@ -56,32 +65,45 @@ public class StaffLoginActivity extends AppCompatActivity {
         staff_username = (EditText) findViewById(R.id.staff_username);
         edit_name = (TextView) findViewById(R.id.edit_name);
         btn_qrcode = (ImageView) findViewById(R.id.btn_qrcode);
-        final String choice = getIntent().getStringExtra("Choice");
+        final String sharedchoice = SharedPref.getSharedPreferenceForString(StaffLoginActivity.this, SharedPref.CHOICE);
+        Log.d("sharedchoice",sharedchoice);
+
+            if (sharedchoice.equals("V")){
+                toolbar_title.setText("Visitor");
+            }else{
+                toolbar_title.setText("Exhibitor");
+                linear_login.setVisibility(View.GONE);
+            }
 
         loginBtn = (Button) findViewById(R.id.login_submit);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String mobile = staff_username.getText().toString();
-                Log.d("MobileNumber",mobile);
-                if (gate_number.getText().toString().isEmpty()){
-                    gate_number.requestFocus();
-                    Toast.makeText(StaffLoginActivity.this, "Pls Enter the Gate Number...", Toast.LENGTH_SHORT).show();
-                }else if (staff_username.getText().toString().isEmpty()){
-                    Toast.makeText(StaffLoginActivity.this, "Enter the Mobile Number or Email or VisitorId", Toast.LENGTH_SHORT).show();
-                }else{
-                    SharedPref.putSharedPreferenceForString(StaffLoginActivity.this, SharedPref.GATENO,gate_number.getText().toString());
-                    gate_number.setClickable(false);
-                    gate_number.setEnabled(false);
 
-                   // Log.d("choice",choice);
-                    if (choice.equals("V")){
-                        staffLogin(mobile);
+                if (isNetworkAvailable()){
+                    String mobile = staff_username.getText().toString();
+                    Log.d("MobileNumber",mobile);
+                    if (gate_number.getText().toString().isEmpty()){
+                        gate_number.requestFocus();
+                        Toast.makeText(StaffLoginActivity.this, "Pls Enter the Gate Number...", Toast.LENGTH_SHORT).show();
+                    }else if (staff_username.getText().toString().isEmpty()){
+                        Toast.makeText(StaffLoginActivity.this, "Enter the Mobile Number or Email or VisitorId", Toast.LENGTH_SHORT).show();
                     }else{
-                        exhibitorGateAccess(mobile);
+                        SharedPref.putSharedPreferenceForString(StaffLoginActivity.this, SharedPref.GATENO,gate_number.getText().toString());
+                        gate_number.setClickable(false);
+                        gate_number.setEnabled(false);
+
+                        if (sharedchoice.equals("V")){
+                            staffLogin(mobile);
+                        }else{
+                            exhibitorGateAccess(mobile);
+                        }
                     }
+                }else{
+                    Toast.makeText(StaffLoginActivity.this, "Internet Connection Lost....!", Toast.LENGTH_SHORT).show();
 
                 }
+
             }
         });
         gate_number.setClickable(false);
@@ -137,6 +159,16 @@ public class StaffLoginActivity extends AppCompatActivity {
             }
         });
 
+        back_layout = (RelativeLayout) findViewById(R.id.back_layout) ;
+        back_layout.setVisibility(View.VISIBLE);
+        back_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(StaffLoginActivity.this,MenuSelectionActivity.class));
+                finish();
+            }
+        });
+
         btn_qrcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,6 +197,13 @@ public class StaffLoginActivity extends AppCompatActivity {
 
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     private void enableEditText() {
         gate_number.setFocusableInTouchMode(true);
         gate_number.setFocusable(true);
@@ -175,6 +214,13 @@ public class StaffLoginActivity extends AppCompatActivity {
         gate_number.setEnabled(false);
         gate_number.setFocusable(false);
         gate_number.setFocusableInTouchMode(false);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(StaffLoginActivity.this,MenuSelectionActivity.class));
+        finish();
     }
 
     private void staffLogin(String email) {
@@ -213,6 +259,7 @@ public class StaffLoginActivity extends AppCompatActivity {
                                 intent.putExtra("TOTALENTRIES", totalEntries);
                                 intent.putExtra("LASTACCESS", lastAccess);
                                 startActivity(intent);
+                                overridePendingTransition(R.anim.enter, R.anim.exit);
                                 finish();
                             }
                             else{

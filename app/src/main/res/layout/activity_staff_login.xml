@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:gravity="center"
         android:layout_below="@+id/toolbar"
         android:layout_height="wrap_content">
 
@@ -20,9 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="130dp"
             android:src="@drawable/connect"/>
-
-
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
